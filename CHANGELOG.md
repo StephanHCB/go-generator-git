@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/StephanHCB/go-generator-git/compare/v1.0.0...v2.0.0) (2022-07-26)
+
+
+### Features
+
+* **auth+init:** added better auth and git init repository support, added path output for clone operations ([9b5f634](https://github.com/StephanHCB/go-generator-git/commit/9b5f634d6d9bf6a7a60ece92b72e7d099eeb1161))
+
+
+### BREAKING CHANGES
+
+* **auth+init:** changed some apis and exposed as v2
+
 # 1.0.0 (2022-06-22)
 
 
