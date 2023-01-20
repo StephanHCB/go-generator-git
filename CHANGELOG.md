@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/StephanHCB/go-generator-git/compare/v2.0.0...v2.1.0) (2023-01-20)
+
+
+### Bug Fixes
+
+* **#13:** update node and go versions and disable CGO ([5792457](https://github.com/StephanHCB/go-generator-git/commit/57924571f9cff9ca94001340a8b346faff358b0c)), closes [#13](https://github.com/StephanHCB/go-generator-git/issues/13)
+
+
+### Features
+
+* **#13:** bump dependencies ([909ee0f](https://github.com/StephanHCB/go-generator-git/commit/909ee0fe3d59560c80dd056a39403a6667e973ef)), closes [#13](https://github.com/StephanHCB/go-generator-git/issues/13)
+
 # [2.0.0](https://github.com/StephanHCB/go-generator-git/compare/v1.0.0...v2.0.0) (2022-07-26)
 
 
