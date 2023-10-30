@@ -38,16 +38,24 @@ func TestHappyPath_End2End_NewTargetBranch(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, response)
 	require.True(t, response.Success)
-	// TODO check response some more
+	require.Empty(t, response.Errors)
+	require.Equal(t, 1, len(response.RenderedFiles))
+	require.Equal(t, "generated-main.yaml", response.RenderedFiles[0].RelativeFilePath)
 
 	response, err = generatorgit.Generate(ctx)
 	require.Nil(t, err)
 	require.NotNil(t, response)
 	require.True(t, response.Success)
+	require.Empty(t, response.Errors)
+	require.True(t, len(response.RenderedFiles) > 20)
 	// TODO check response some more, contains a certain file? No errors?
 
 	docs.Then("the repositories are cloned as expected and rendering succeeds")
 	// TODO check genspec, renderspec, and one other small file
+
+	err = generatorgit.DeleteRenderSpecFile(ctx)
+	require.Nil(t, err)
+	// TODO check file was deleted
 
 	docs.Then("commit and (simulated) push succeed")
 	err = generatorgit.CommitAndPush(ctx, "somebody", "somebody@mailinator.com", "initial generation", nil)

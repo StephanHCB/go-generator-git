@@ -12,26 +12,26 @@ type GitApiRepo interface {
 
 // Functionality that this library exposes.
 type GitApi interface {
-	// create a temporary working directory with a random name underneath basePath
+	// CreateTemporaryWorkdir creates a temporary working directory with a random name underneath basePath.
 	//
 	// You need to call this before any of the other methods can be called
 	//
-	// We use a random sub directory so multiple goroutines can render in parallel
+	// We use a random subdirectory so multiple goroutines can render in parallel
 	CreateTemporaryWorkdir(ctx context.Context, basePath string) error
 
-	// clone the source repo into the working directory and switch to the given branch (or tag, or revision)
+	// CloneSourceRepo clones the source repo into the working directory and switch to the given branch (or tag, or revision).
 	CloneSourceRepo(ctx context.Context, gitRepoUrl string, gitBranch string, auth transport.AuthMethod) (GitApiRepo, error)
 
-	// clone the target repo into the working directory and set up the given branch
+	// CloneTargetRepo clones the target repo into the working directory and sets up the given branch.
 	//
-	// if the branch does not yet exist, it will be created from the base branch (or tag, or revision),
+	// If the branch does not yet exist, it will be created from the base branch (or tag, or revision),
 	// otherwise we just check it out.
 	CloneTargetRepo(ctx context.Context, gitRepoUrl string, gitBranch string, baseBranch string, auth transport.AuthMethod) (GitApiRepo, error)
 
-	// prepare the target repo into the working directory
+	// PrepareTargetRepo prepares the target repo inside the working directory.
 	PrepareTargetRepo(ctx context.Context, gitRepoUrl string, gitBranch string, auth transport.AuthMethod) (GitApiRepo, error)
 
-	// write the given parameters for the given generator to a render spec file in the target directory
+	// WriteRenderSpecFile writes the given parameters for the given generator to a render spec file in the target directory.
 	//
 	// unless some specific reason prevents you from this naming convention, renderSpecFile should be
 	// 'generated-<generatorName>.yaml'
@@ -50,19 +50,34 @@ type GitApi interface {
 		renderSpecFile string,
 		parameters map[string]interface{}) (*genlibapi.Response, error)
 
-	// generate files using the render spec file written by WriteRenderSpecFile
+	// Generate generates files using the render spec file written by WriteRenderSpecFile.
 	//
 	// Response is filled even in case of an error and will contain more details of what caused the error
 	// and what output files were affected. After a successful run, Response also contains the list of files
 	// that were rendered.
 	Generate(ctx context.Context) (*genlibapi.Response, error)
 
-	// commit the changes in the target and push them (if an auth method is supplied)
+	// DeleteRenderSpecFile removes the render spec file written by WriteRenderSpecFile
+	//
+	// This is an optional step between Generate and CommitAndPush, in case you do not wish to commit the
+	// render spec file.
+	//
+	// In most cases, deleting the render spec file is a BAD IDEA. The render spec file documents the parameters
+	// used to perform the render run, so it is useful to check it in. Also, your user may wish to re-run
+	// the render process with a new version of the template using the same parameters (or mostly the same parameters)
+	// that were used during the original render run.
+	//
+	// There are however cases, where the generator incrementally adds a small number of files to a repository, and
+	// it is undesirable to clutter the repository with lots of render spec files, and using the same filename
+	// multiple times would create conflicts in git pull requests that otherwise do not touch the same files.
+	DeleteRenderSpecFile(ctx context.Context) error
+
+	// CommitAndPush commits the changes in the target and pushes them (if an auth method is supplied).
 	CommitAndPush(ctx context.Context, name string, email string, message string, auth transport.AuthMethod) error
 
-	// delete the temporary working directory, including the source and target clones underneath it
+	// Cleanup deletes the temporary working directory, including the source and target clones underneath it.
 	//
-	// the base path given to CreateTemporaryWorkdir is left untouched so it can be re-used for the next
+	// the base path given to CreateTemporaryWorkdir is left untouched, so it can be re-used for the next
 	// (or concurrent) render operations.
 	Cleanup(ctx context.Context) error
 }
