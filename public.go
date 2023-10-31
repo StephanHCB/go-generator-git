@@ -44,6 +44,10 @@ func Generate(ctx context.Context) (*genlibapi.Response, error) {
 	return Instance.Generate(ctx)
 }
 
+func DeleteRenderSpecFile(ctx context.Context) error {
+	return Instance.DeleteRenderSpecFile(ctx)
+}
+
 func CommitAndPush(ctx context.Context, name string, email string, message string, auth transport.AuthMethod) error {
 	return Instance.CommitAndPush(ctx, name, email, message, auth)
 }

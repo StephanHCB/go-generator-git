@@ -12,6 +12,7 @@ import (
 	generatorlib "github.com/StephanHCB/go-generator-lib"
 	genlibapi "github.com/StephanHCB/go-generator-lib/api"
 	"github.com/go-git/go-git/v5/plumbing/transport"
+	"os"
 	"path/filepath"
 )
 
@@ -185,6 +186,27 @@ func (g *GitGeneratorImpl) Generate(ctx context.Context) (*genlibapi.Response, e
 		return response, errors.New("rendering failed, see response for details")
 	}
 	return response, nil
+}
+
+func (g *GitGeneratorImpl) DeleteRenderSpecFile(ctx context.Context) error {
+	if g.workdir == nil {
+		return errCreateWorkdirFirst(ctx)
+	}
+	if g.target == nil {
+		return errCloneTargetFirst(ctx)
+	}
+	if g.renderSpecFile == "" {
+		return errWriteRenderSpecFirst(ctx)
+	}
+
+	specFilePath := filepath.Join(g.target.Path(), g.renderSpecFile)
+	err := os.Remove(specFilePath)
+	if err != nil {
+		aulogging.Logger.Ctx(ctx).Warn().WithErr(err).Print("error deleting render spec file %s: %s", specFilePath, err.Error())
+		return err
+	}
+
+	return nil
 }
 
 func (g *GitGeneratorImpl) CommitAndPush(ctx context.Context, name string, email string, message string, auth transport.AuthMethod) error {
