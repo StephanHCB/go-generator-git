@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/StephanHCB/go-generator-git/compare/v2.1.0...v2.2.0) (2023-10-31)
+
+
+### Features
+
+* **#21:** support delete render spec file ([92e5f2c](https://github.com/StephanHCB/go-generator-git/commit/92e5f2c581a4fa704e2f74108732097cd8153144)), closes [#21](https://github.com/StephanHCB/go-generator-git/issues/21)
+
 # [2.1.0](https://github.com/StephanHCB/go-generator-git/compare/v2.0.0...v2.1.0) (2023-01-20)
 
 
